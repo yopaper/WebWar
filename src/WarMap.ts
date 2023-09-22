@@ -1,5 +1,5 @@
-import * as mapBlock from "./MapBlock"
-import * as basic from "./Basic"
+import * as mapBlock from "./MapBlock.js"
+import * as basic from "./Basic.js"
 
 export class WarMap{
     private blocksTable:{ [key:number] : { [key:number] : mapBlock.MapBlock} };
@@ -20,10 +20,16 @@ export class WarMap{
         return this.blocksTable[position.x][position.y];
     }//--------------------------------------------
     // 加入方塊
-    public addBlock(block:mapBlock.MapBlock){
-        var position = block.position;
+    public addBlock(block:mapBlock.MapBlock):void{
+        var position = block.indexPosition;
         if( !(position.x in this.blocksTable ) )
         this.blocksTable[position.x] = {};
         this.blocksTable[position.x][position.y] = block;
+        this.blocksList.push( block );
+    }//--------------------------------------------
+    public drawAllBlock():void{
+        for(var i=0; i<this.blocksList.length; i++){
+            this.blocksList[i].draw();
+        }
     }//--------------------------------------------
 }//============================================================

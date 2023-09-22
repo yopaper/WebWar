@@ -1,19 +1,20 @@
-import * as basic from "./Basic";
+import * as basic from "./Basic.js"
 
 var canvas          : HTMLCanvasElement;
-var canvasOffset    : basic.Position;
-var canvasScale     : number;
+var canvasOffset    : basic.Position = new basic.Position(0, 0);
+var canvasScale     : number = 1;
 var canvasContext   : CanvasRenderingContext2D;
 //------------------------------------------------
 export function getCanvas():HTMLCanvasElement{
     return canvas;
 }//-----------------------------------------------
 export function buildCanvas( parentObject:HTMLElement, width:number, height:number ):HTMLCanvasElement{
-    canvas = new HTMLCanvasElement();
+    canvas = document.createElement("canvas");
     canvasContext = canvas.getContext("2d")as CanvasRenderingContext2D;
     canvas.width = width;
     canvas.height = height;
     parentObject.appendChild(canvas);
+    console.log(`建立大小為:(${width}x${height})的Canvas`);
     return canvas;
 }//-----------------------------------------------
 export function getPosOnCanvas( position:basic.Position ):basic.Position{

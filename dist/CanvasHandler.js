@@ -1,17 +1,18 @@
-import * as basic from "./Basic";
+import * as basic from "./Basic.js";
 var canvas;
-var canvasOffset;
-var canvasScale;
+var canvasOffset = new basic.Position(0, 0);
+var canvasScale = 1;
 var canvasContext;
 export function getCanvas() {
     return canvas;
 }
 export function buildCanvas(parentObject, width, height) {
-    canvas = new HTMLCanvasElement();
+    canvas = document.createElement("canvas");
     canvasContext = canvas.getContext("2d");
     canvas.width = width;
     canvas.height = height;
     parentObject.appendChild(canvas);
+    console.log(`建立大小為:(${width}x${height})的Canvas`);
     return canvas;
 }
 export function getPosOnCanvas(position) {
