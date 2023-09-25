@@ -1,28 +1,32 @@
+import * as basic from "./Basic.js";
+import * as path from "./PathHandler.js";
+import { UnitContainer } from "./UnitContainer.js";
 export class WarMap {
     constructor() {
-        this.blocksTable = {};
-        this.blocksList = [];
+        this.pathHandler = new path.PathHandler(this);
+        this.unitContainer = new UnitContainer(this);
+        this.blocksTable = new basic.Table2D();
+    }
+    update() {
+        this.drawAllBlock();
+        this.unitContainer.update();
     }
     getBlocks() {
-        return Array.from(this.blocksList);
+        return this.blocksTable.GetAllValues();
     }
-    getBlock(position) {
-        if (!(position.x in this.blocksTable))
-            return null;
-        if (!(position.y in this.blocksTable[position.x]))
-            return null;
-        return this.blocksTable[position.x][position.y];
+    getBlockWithPosition(position) {
+        return this.blocksTable.Get(position.x, position.y);
+    }
+    getBlock(x, y) {
+        return this.blocksTable.Get(x, y);
     }
     addBlock(block) {
-        var position = block.indexPosition;
-        if (!(position.x in this.blocksTable))
-            this.blocksTable[position.x] = {};
-        this.blocksTable[position.x][position.y] = block;
-        this.blocksList.push(block);
+        this.blocksTable.Set(block.indexPosition.x, block.indexPosition.y, block);
     }
     drawAllBlock() {
-        for (var i = 0; i < this.blocksList.length; i++) {
-            this.blocksList[i].draw();
+        var blocks = this.blocksTable.GetAllValues();
+        for (var i = 0; i < blocks.length; i++) {
+            blocks[i].draw();
         }
     }
 }

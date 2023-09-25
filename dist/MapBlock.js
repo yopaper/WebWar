@@ -1,3 +1,4 @@
+import * as basic from "./Basic.js";
 import * as canvas from "./CanvasHandler.js";
 import * as grid from "./Grid.js";
 export class MapBlock {
@@ -9,9 +10,17 @@ export class MapBlock {
     realPosition() {
         return grid.mapBlockGrid.indexToReal(this.indexPosition);
     }
+    randomPositionOn() {
+        return this.realPosition().getOffset((Math.random() * 2 - 1) * grid.BLOCK_SIZE / 2.25, (Math.random() * 2 - 1) * grid.BLOCK_SIZE / 2.25);
+    }
+    getAdjacentBlockWithOffset(offset) {
+        var index = this.indexPosition.getOffset(offset.x, offset.y);
+        return this.mapOwner.getBlockWithPosition(index);
+    }
+    getPath() {
+        return this.mapOwner.pathHandler.getBlockPath(this.indexPosition.x, this.indexPosition.y);
+    }
     draw() {
-        var pos1 = this.realPosition().getOffset(-grid.BLOCK_SIZE / 2, -grid.BLOCK_SIZE / 2);
-        var pos2 = pos1.getOffset(grid.BLOCK_SIZE, grid.BLOCK_SIZE);
-        canvas.drawRect(pos1, pos2, "#DDDDDD", "#BBBBBB", 1);
+        canvas.drawRectCenter(this.realPosition(), new basic.Vector2(grid.BLOCK_SIZE, grid.BLOCK_SIZE), "#DDDDDD", "#BBBBBB", 1);
     }
 }

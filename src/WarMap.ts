@@ -1,35 +1,37 @@
-import * as mapBlock from "./MapBlock.js"
-import * as basic from "./Basic.js"
+import * as mapBlock        from "./MapBlock.js"
+import * as basic           from "./Basic.js"
+import * as path            from "./PathHandler.js"
+import {UnitContainer}      from "./UnitContainer.js"
 
 export class WarMap{
-    private blocksTable:{ [key:number] : { [key:number] : mapBlock.MapBlock} };
-    private blocksList:mapBlock.MapBlock[];
+    public pathHandler:path.PathHandler = new path.PathHandler(this);
+    public unitContainer:UnitContainer = new UnitContainer(this);
+    private blocksTable:basic.Table2D<mapBlock.MapBlock> = new basic.Table2D();
     //---------------------------------------------
-    constructor(){
-        this.blocksTable = {};
-        this.blocksList = [];
+    public update():void{
+        
+        this.drawAllBlock();
+        this.unitContainer.update();
     }//--------------------------------------------
     // 取得所有方塊
     public getBlocks():mapBlock.MapBlock[]{
-        return Array.from( this.blocksList );
+        return this.blocksTable.GetAllValues();
     }//--------------------------------------------
     // 取得方塊
-    public getBlock(position:basic.Position):mapBlock.MapBlock|null{
-        if( !(position.x in this.blocksTable) )return null;
-        if( !(position.y in this.blocksTable[position.x]) )return null;
-        return this.blocksTable[position.x][position.y];
+    public getBlockWithPosition(position:basic.Vector2):mapBlock.MapBlock|null{
+        return this.blocksTable.Get(position.x, position.y);
+    }//--------------------------------------------
+    public getBlock(x:number, y:number):mapBlock.MapBlock|null{
+        return this.blocksTable.Get(x, y);
     }//--------------------------------------------
     // 加入方塊
     public addBlock(block:mapBlock.MapBlock):void{
-        var position = block.indexPosition;
-        if( !(position.x in this.blocksTable ) )
-        this.blocksTable[position.x] = {};
-        this.blocksTable[position.x][position.y] = block;
-        this.blocksList.push( block );
+        this.blocksTable.Set( block.indexPosition.x, block.indexPosition.y, block );
     }//--------------------------------------------
     public drawAllBlock():void{
-        for(var i=0; i<this.blocksList.length; i++){
-            this.blocksList[i].draw();
+        var blocks = this.blocksTable.GetAllValues();
+        for(var i=0; i<blocks.length; i++){
+            blocks[i].draw();
         }
     }//--------------------------------------------
 }//============================================================
