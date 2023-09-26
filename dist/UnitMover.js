@@ -56,6 +56,8 @@ export class NormalUnitMover extends UnitMover {
         this.nextTargetIndex.setWithVector(nextIndex);
     }
     checkArrive() {
+        if (this.needToFindNext)
+            return;
         if (!this.unitOwner.mapBlockIndex().equal(this.nextTargetIndex))
             return;
         if (this.unitOwner.position.simpleDistance(this.nextTargetPosition) > 5)

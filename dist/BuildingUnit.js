@@ -22,11 +22,11 @@ export class SmallBarracks extends unit.BuildingUnit {
             new unitSpawner.UnitSpawner(this, (spawner) => {
                 var spawnedUnit = new gameUnit.Fighter(this.mapOwner, this.team, this.standedBlock().randomPositionOn());
                 return spawnedUnit;
-            }, 5, 1, 2, 3),
+            }, 1, 1, 5, 5),
             new unitSpawner.UnitSpawner(this, (spawner) => {
                 var spawnedUnit = new gameUnit.Shooter(this.mapOwner, this.team, this.standedBlock().randomPositionOn());
                 return spawnedUnit;
-            }, 5, 1, 2, 3),
+            }, 1, 1, 5, 5),
         ];
     }
     attackerSource() {

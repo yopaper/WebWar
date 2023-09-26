@@ -13,9 +13,7 @@ for (var x = 1; x <= 20; x++) {
     }
 }
 new buildingUnit.SmallBarracks(mainMap, UnitTeam.Red, new basic.Vector2(2, 2));
-new buildingUnit.SmallBarracks(mainMap, UnitTeam.Red, new basic.Vector2(2, 19));
 new buildingUnit.SmallBarracks(mainMap, UnitTeam.Blue, new basic.Vector2(19, 19));
-new buildingUnit.SmallBarracks(mainMap, UnitTeam.Blue, new basic.Vector2(19, 2));
 function update() {
     canvas.clearCanvas();
     mainMap.update();
