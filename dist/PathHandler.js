@@ -10,49 +10,52 @@ export class PathHandler {
         if (this.mapOwner.getBlock(x, y) == null)
             return null;
         if (this.pathTable.Get(x, y) == null) {
-            this.pathTable.Set(x, y, new BlockPath(this, new basic.Vector2(x, y)));
+            this.pathTable.Set(x, y, new BlockPath(this, new basic.Vector2Int(x, y)));
         }
         return this.pathTable.Get(x, y);
     }
-    getBlockPathWithPosition(position) {
-        return this.getBlockPath(position.x, position.y);
+    getBlockPathWithVector(position) {
+        return this.getBlockPath(position.getX(), position.getY());
     }
     getDistance(start, target) {
-        if (this.mapOwner.getBlock(start.x, start.y) == null)
-            return null;
-        if (this.mapOwner.getBlock(target.x, target.y) == null)
-            return null;
-        var path = this.getBlockPath(target.x, target.y);
+        if (this.mapOwner.getBlock(start.getX(), start.getY()) == null)
+            return basic.MapBlockDistance.inaccessible();
+        if (this.mapOwner.getBlock(target.getX(), target.getY()) == null)
+            return basic.MapBlockDistance.inaccessible();
+        var path = this.getBlockPath(target.getX(), target.getY());
         if (path == null)
-            return null;
-        return path.getDistance(start.x, start.y);
+            return basic.MapBlockDistance.inaccessible();
+        return path.getDistance(start.getX(), start.getY());
     }
 }
 export class BlockPath {
     constructor(handlerOwner, indexPosition) {
         this.maxDistance = 0;
         this.distTable = new basic.Table2D();
-        console.log(`建立(${indexPosition.x}, ${indexPosition.y})距離表`);
+        console.log(`建立(${indexPosition.getX()}, ${indexPosition.getY()})距離表`);
         this.handlerOwner = handlerOwner;
         this.mapOwner = handlerOwner.mapOwner;
-        this.indexPosition = indexPosition;
+        this.indexPosition = indexPosition.copy();
         this.buildTable();
     }
     getDistance(x, y) {
-        return this.distTable.Get(x, y);
+        var dist = this.distTable.Get(x, y);
+        if (dist != null)
+            return new basic.MapBlockDistance(dist);
+        return new basic.MapBlockDistance(Number.POSITIVE_INFINITY);
     }
     getDistanceWithPosition(position) {
-        return this.getDistance(position.x, position.y);
+        return this.getDistance(position.getX(), position.getY());
     }
     getNextStepToThis(position) {
-        var currentDist = this.getDistanceWithPosition(position);
+        var currentDist = this.getDistanceWithPosition(position).getBlockDistance();
         if (currentDist == null)
             return null;
         var adjacentPosList = position.getAdjacent();
         var nextPosList = [];
         for (var i = 0; i < adjacentPosList.length; i++) {
             var adjPos = adjacentPosList[i];
-            if (this.getDistanceWithPosition(adjPos) != currentDist - 1)
+            if (this.getDistanceWithPosition(adjPos).getBlockDistance() != currentDist - 1)
                 continue;
             nextPosList.push(adjPos);
         }
@@ -64,10 +67,10 @@ export class BlockPath {
         var nextStep = this.getNextStepToThis(position);
         if (nextStep == null)
             return null;
-        return this.mapOwner.getBlockWithPosition(nextStep);
+        return this.mapOwner.getBlockWithIndex(nextStep);
     }
     getMapBlock() {
-        return this.mapOwner.getBlockWithPosition(this.indexPosition);
+        return this.mapOwner.getBlockWithIndex(this.indexPosition);
     }
     distanceDebugDraw() {
         var _a;
@@ -82,9 +85,9 @@ export class BlockPath {
         }
     }
     buildTable() {
-        var indexToProcess = [{ x: this.indexPosition.x, y: this.indexPosition.y }];
+        var indexToProcess = [{ x: this.indexPosition.getX(), y: this.indexPosition.getY() }];
         var procedssedIndex = new basic.Table2D();
-        this.distTable.Set(this.indexPosition.x, this.indexPosition.y, 0);
+        this.distTable.Set(this.indexPosition.getX(), this.indexPosition.getY(), 0);
         var addIndex = (index) => {
             if (procedssedIndex.Get(index.x, index.y) != null || this.distTable.Get(index.x, index.y) != null)
                 return;
@@ -94,7 +97,7 @@ export class BlockPath {
         var process = (index) => {
             if (this.mapOwner.getBlock(index.x, index.y) == null)
                 return;
-            var adjacentList = new basic.Vector2(index.x, index.y).getAdjacentDict();
+            var adjacentList = new basic.Vector2Int(index.x, index.y).getAdjacentDict();
             var minDist = null;
             for (var i = 0; i < adjacentList.length; i++) {
                 var adjacent = adjacentList[i];

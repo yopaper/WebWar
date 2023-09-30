@@ -10,9 +10,9 @@ import * as grid            from "./Grid.js"
 
 export class Fighter extends unit.Unit{
     protected override draw(): void {
-        canvas.drawRectCenter(this.position, new basic.Vector2(8, 8),
-        this.team.getMainColor(), this.team.getSubColor(), 2);
-        canvas.drawRectCenter(this.position, new basic.Vector2(4, 4),
+        canvas.drawRectCenter(this.position, new basic.Vector2(5, 5),
+        this.team.getMainColor(), this.team.getSubColor(), 1);
+        canvas.drawRectCenter(this.position, new basic.Vector2(3, 3),
         this.team.getMainColorWithRate(this.hp.hpRate()), null, null);
     }//-------------------------------------------------------
     public override unitRank(): number {
@@ -34,7 +34,7 @@ export class Fighter extends unit.Unit{
     }//-------------------------------------------------------
     protected override targetFindersSource(): targetFinder.UnitTargetFinder[] {
         return[
-            new targetFinder.AttackTargetFinder(this, grid.BLOCK_SIZE*3, 1),
+            new targetFinder.AttackTargetFinder(this, new basic.MapBlockDistance(3), 1),
             new targetFinder.MainTargetFinder(this),
         ];
     }//-------------------------------------------------------
@@ -42,9 +42,9 @@ export class Fighter extends unit.Unit{
 
 export class Shooter extends unit.Unit{
     protected override draw(): void {
-        canvas.drawDiamond(this.position, new basic.Vector2(12, 12),
-        this.team.getMainColor(), {strokeColor:this.team.getSubColor(), strokeWidth:2});
-        canvas.drawDiamond(this.position, new basic.Vector2(6, 6),
+        canvas.drawDiamond(this.position, new basic.Vector2(7, 7),
+        this.team.getMainColor(), {strokeColor:this.team.getSubColor(), strokeWidth:1});
+        canvas.drawDiamond(this.position, new basic.Vector2(3, 3),
         this.team.getMainColorWithRate(this.hp.hpRate()));
     }//-------------------------------------------------------
     public override unitRank(): number {
@@ -66,7 +66,7 @@ export class Shooter extends unit.Unit{
     }//-------------------------------------------------------
     protected override targetFindersSource(): targetFinder.UnitTargetFinder[] {
         return[
-            new targetFinder.AttackTargetFinder(this, grid.BLOCK_SIZE*3, 1),
+            new targetFinder.AttackTargetFinder(this,  new basic.MapBlockDistance(3), 1),
             new targetFinder.MainTargetFinder(this),
         ];
     }//-------------------------------------------------------

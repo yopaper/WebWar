@@ -27,7 +27,7 @@ export class UnitContainer {
         return Array.from(this.unitsList);
     }
     getUnitsOn(index) {
-        var units = this.indexerTable.Get(index.x, index.y);
+        var units = this.indexerTable.Get(index.getX(), index.getY());
         if (units == null)
             return [];
         return Array.from(units);
@@ -47,15 +47,15 @@ export class UnitContainer {
     indexerLoadUnits() {
         var _a;
         var checkArray = (index) => {
-            if (this.indexerTable.Get(index.x, index.y) != null)
+            if (this.indexerTable.GetWithVector(index) != null)
                 return;
-            this.indexerTable.Set(index.x, index.y, []);
+            this.indexerTable.SetWithVector(index, []);
         };
         for (var i = 0; i < this.unitsList.length; i++) {
             var unit = this.unitsList[i];
             var unitIndexerIndex = grid.unitIndexerGrid.realToIndex(unit.position);
             checkArray(unitIndexerIndex);
-            (_a = this.indexerTable.Get(unitIndexerIndex.x, unitIndexerIndex.y)) === null || _a === void 0 ? void 0 : _a.push(unit);
+            (_a = this.indexerTable.GetWithVector(unitIndexerIndex)) === null || _a === void 0 ? void 0 : _a.push(unit);
         }
     }
     clearIndexer() {
@@ -68,7 +68,7 @@ export class UnitContainer {
         for (var i = 0; i < indexList.length; i++) {
             var index = indexList[i];
             var units = this.indexerTable.Get(index.x, index.y);
-            var indexerPosition = grid.unitIndexerGrid.indexToReal(new basic.Vector2(index.x, index.y));
+            var indexerPosition = grid.unitIndexerGrid.indexToReal(new basic.Vector2Int(index.x, index.y));
             if (units == null)
                 continue;
             for (var j = 0; j < units.length; j++) {

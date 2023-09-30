@@ -35,6 +35,7 @@ export abstract class Unit{
     }//-----------------------------------------------------
     public update():void{
         this.draw();
+        this.hp.update();
         this.mover.update();
         this.attacker.update();
         this.behavior.update();
@@ -43,14 +44,14 @@ export abstract class Unit{
         for(var i=0; i<this.spawners.length; i++)
             this.spawners[i].update();
     }//-----------------------------------------------------
-    public mapBlockIndex():basic.Vector2{
+    public mapBlockIndex():basic.Vector2Int{
         return grid.mapBlockGrid.realToIndex( this.position );
     }//-----------------------------------------------------
     public unitIndexerIndex():basic.Vector2{
         return grid.unitIndexerGrid.realToIndex( this.position );
     }//-----------------------------------------------------
     public standedBlock():mapBlock.MapBlock{
-        return this.mapOwner.getBlockWithPosition( this.mapBlockIndex() )as mapBlock.MapBlock;
+        return this.mapOwner.getBlockWithIndex( this.mapBlockIndex() )as mapBlock.MapBlock;
     }//-----------------------------------------------------
     public getTarget():Unit|null{
         for(var i=0; i<this.targetFinders.length; i++){
@@ -59,19 +60,19 @@ export abstract class Unit{
         }
         return null;
     }//-----------------------------------------------------
-    public targetIndexPosition():basic.Vector2|null{
+    public targetIndexPosition():basic.Vector2Int|null{
         for(var i=0; i<this.targetFinders.length; i++){
             var target = this.targetFinders[i].targetIndexPosition();
             if( target!=null )return target;
         }
         return null;
     }//-----------------------------------------------------
-    public indexDistanceWithIndex(indexPosition:basic.Vector2):number|null{
+    public indexDistanceWithIndex(indexPosition:basic.Vector2Int):basic.MapBlockDistance{
         return this.mapOwner.pathHandler.getDistance(
             this.mapBlockIndex(), indexPosition
         );
     }//-----------------------------------------------------
-    public indexDistanceWithUnit(unit:Unit):number|null{
+    public indexDistanceWithUnit(unit:Unit):basic.MapBlockDistance{
         return this.indexDistanceWithIndex( unit.mapBlockIndex() );
     }//-----------------------------------------------------
     public abstract unitRank():number;
@@ -94,7 +95,7 @@ export abstract class Unit{
 }//=========================================================
 
 export abstract class BuildingUnit extends Unit{
-    constructor( mapOwner:warMap.WarMap, team:unitTeam.UnitTeam, indexPosition:basic.Vector2 ){
+    constructor( mapOwner:warMap.WarMap, team:unitTeam.UnitTeam, indexPosition:basic.Vector2Int ){
         super(mapOwner, team, grid.mapBlockGrid.indexToReal( indexPosition ));
     }//-----------------------------------------------------
     protected override moverSource(): unitMover.UnitMover {

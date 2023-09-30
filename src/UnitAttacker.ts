@@ -1,4 +1,5 @@
 import * as unit from "./BasicUnit.js"
+import * as canvas from "./CanvasHandler.js"
 
 export abstract class UnitAttacker{
     public unitOwner:unit.Unit;
@@ -41,6 +42,7 @@ export class NormalAttacker extends UnitAttacker{
     public override update(): void {
         this.coolDownCount();
         this.attackTarget();
+        
     }//--------------------------------------------
     protected coolDownCount():void{
         if( this.attackCoolDown<=0 )return;
@@ -49,9 +51,11 @@ export class NormalAttacker extends UnitAttacker{
     protected attackTarget():void{
         var target = this.unitOwner.getTarget();
         if( !this.isAttacking() )return;
+        if( target==null )return;
         if( this.attackCoolDown > 0 )return;
         this.attackCoolDown = this.attackCoolDownMax;
-        target?.hp.damage(this.attackDamage);
+        target.hp.damage(this.attackDamage);
+        canvas.drawLine( this.unitOwner.position, target.position, this.unitOwner.team.getMainColor(), 0 );
     }//--------------------------------------------
 
 }//================================================

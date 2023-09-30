@@ -10,16 +10,16 @@ export class Grid{
     constructor(gridSize:number){
         this.gridSize = gridSize;
     }//-------------------------------------------------------
-    public realToIndex(position:basic.Vector2):basic.Vector2{
-        return new basic.Vector2(
-            Math.round( position.x / this.gridSize ),
-            Math.round( position.y / this.gridSize )
+    public realToIndex(position:basic.Vector2):basic.Vector2Int{
+        return new basic.Vector2Int(
+            Math.round( position.getX() / this.gridSize ),
+            Math.round( position.getY() / this.gridSize )
         );
     }//-------------------------------------------------------
-    public indexToReal(index:basic.Vector2):basic.Vector2{
+    public indexToReal(index:basic.Vector2Int):basic.Vector2{
         return new basic.Vector2(
-            index.x * this.gridSize,
-            index.y * this.gridSize
+            index.getX() * this.gridSize,
+            index.getY() * this.gridSize
         );
     }//-------------------------------------------------------
 }//===========================================================

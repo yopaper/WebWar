@@ -21,7 +21,7 @@ export class UnitTargetFinder extends TargetFinder {
         if (this.target != null && this.loseTargetCondition()) {
             this.target = null;
         }
-        else {
+        else if (this.target == null) {
             this.findTarget();
         }
     }
@@ -42,6 +42,7 @@ class ClosestTargetFinder extends UnitTargetFinder {
         for (var i = 0; i < filtedUnits.length; i++) {
             var unit = filtedUnits[i];
             var dist = this.unitOwner.position.euclideanDistance(unit.position);
+            var dist = this.unitOwner.indexDistanceWithUnit(unit).getBlockDistance();
             if (dist == minDist) {
                 closestUnits.push(unit);
             }
@@ -70,14 +71,14 @@ export class AttackTargetFinder extends ClosestTargetFinder {
         this.findRange = findRange;
     }
     filterCondition(unit) {
-        var dist = this.unitOwner.position.euclideanDistance(unit.position);
-        return (!this.unitOwner.team.same(unit.team) && dist <= this.findRange);
+        var dist = this.unitOwner.indexDistanceWithUnit(unit).getBlockDistance();
+        return (!this.unitOwner.team.same(unit.team) && dist <= this.findRange.getBlockDistance());
     }
     loseTargetCondition() {
         if (this.target == null)
             return false;
-        var dist = this.unitOwner.indexDistanceWithUnit(this.target);
-        return (dist == null || dist > this.findRange || this.target.hp.dead() ||
+        var dist = this.unitOwner.indexDistanceWithUnit(this.target).getBlockDistance();
+        return (dist > this.findRange.getBlockDistance() || this.target.hp.dead() ||
             this.unitOwner.team.same(this.target.team));
     }
 }
@@ -88,6 +89,8 @@ export class MainTargetFinder extends GlobalTargetFinder {
     loseTargetCondition() {
         if (this.target == null)
             return false;
-        return (this.unitOwner.team.same(this.target.team) || this.target.hp.dead());
+        var lose = (this.unitOwner.team.same(this.target.team) || this.target.hp.dead());
+        console.log(lose);
+        return lose;
     }
 }

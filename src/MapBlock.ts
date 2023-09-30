@@ -7,11 +7,11 @@ import * as path from "./PathHandler.js"
 //----------------------------------------------------------------
 export class MapBlock{
     public mapOwner:warMap.WarMap;
-    public indexPosition:basic.Vector2;
+    public indexPosition:basic.Vector2Int;
     //------------------------------------------------------------
-    constructor(mapOwner:warMap.WarMap, position:basic.Vector2){
+    constructor(mapOwner:warMap.WarMap, indexPosition:basic.Vector2Int){
         this.mapOwner = mapOwner;
-        this.indexPosition = position;
+        this.indexPosition = indexPosition;
         mapOwner.addBlock( this );
     }//-----------------------------------------------------------
     public realPosition():basic.Vector2{
@@ -23,12 +23,13 @@ export class MapBlock{
             (Math.random()*2-1)*grid.BLOCK_SIZE/2.25
         );
     }//-----------------------------------------------------------
-    public getAdjacentBlockWithOffset(offset:basic.Vector2):MapBlock|null{
-        var index = this.indexPosition.getOffset( offset.x, offset.y );
-        return this.mapOwner.getBlockWithPosition( index );
+    public getAdjacentBlockWithOffset(offset:basic.Vector2Int):MapBlock|null{
+        var index = this.indexPosition.getOffset( offset.getX(), offset.getY() );
+        return this.mapOwner.getBlockWithIndex( index );
     }//-----------------------------------------------------------
     public getPath():path.BlockPath{
-        return this.mapOwner.pathHandler.getBlockPath( this.indexPosition.x, this.indexPosition.y )as path.BlockPath;
+        return this.mapOwner.pathHandler.getBlockPath(
+            this.indexPosition.getX(), this.indexPosition.getY() )as path.BlockPath;
     }//-----------------------------------------------------------
     public draw():void{
         canvas.drawRectCenter(

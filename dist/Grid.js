@@ -6,10 +6,10 @@ export class Grid {
         this.gridSize = gridSize;
     }
     realToIndex(position) {
-        return new basic.Vector2(Math.round(position.x / this.gridSize), Math.round(position.y / this.gridSize));
+        return new basic.Vector2Int(Math.round(position.getX() / this.gridSize), Math.round(position.getY() / this.gridSize));
     }
     indexToReal(index) {
-        return new basic.Vector2(index.x * this.gridSize, index.y * this.gridSize);
+        return new basic.Vector2(index.getX() * this.gridSize, index.getY() * this.gridSize);
     }
 }
 export const mapBlockGrid = new Grid(BLOCK_SIZE);

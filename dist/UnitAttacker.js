@@ -1,3 +1,4 @@
+import * as canvas from "./CanvasHandler.js";
 export class UnitAttacker {
     constructor(unitOwner) {
         this.unitOwner = unitOwner;
@@ -40,9 +41,12 @@ export class NormalAttacker extends UnitAttacker {
         var target = this.unitOwner.getTarget();
         if (!this.isAttacking())
             return;
+        if (target == null)
+            return;
         if (this.attackCoolDown > 0)
             return;
         this.attackCoolDown = this.attackCoolDownMax;
-        target === null || target === void 0 ? void 0 : target.hp.damage(this.attackDamage);
+        target.hp.damage(this.attackDamage);
+        canvas.drawLine(this.unitOwner.position, target.position, this.unitOwner.team.getMainColor(), 0);
     }
 }

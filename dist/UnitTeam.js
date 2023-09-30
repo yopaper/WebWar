@@ -22,4 +22,4 @@ export class UnitTeam {
     }
 }
 UnitTeam.Red = new UnitTeam({ r: 1, g: 0, b: 0 }, { r: 0.8, g: 0.3, b: 0.3 }, 0);
-UnitTeam.Blue = new UnitTeam({ r: 0.25, g: 0.25, b: 1 }, { r: 0.4, g: 0.4, b: 0.7 }, 1);
+UnitTeam.Blue = new UnitTeam({ r: 0.4, g: 0.4, b: 1 }, { r: 0.1, g: 0.1, b: 0.7 }, 1);

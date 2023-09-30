@@ -32,7 +32,7 @@ export class UnitContainer{
         return Array.from( this.unitsList );
     }//----------------------------------------------------
     public getUnitsOn(index:basic.Vector2):unit.Unit[]{
-        var units = this.indexerTable.Get(index.x, index.y);
+        var units = this.indexerTable.Get(index.getX(), index.getY());
         if( units==null )return[];
         return Array.from( units );
     }//----------------------------------------------------
@@ -49,15 +49,15 @@ export class UnitContainer{
         unitUtils.removeDeadUnitFromArray( this.unitsList );
     }//----------------------------------------------------
     private indexerLoadUnits():void{
-        var checkArray = ( index:basic.Vector2 ):void=>{
-            if( this.indexerTable.Get( index.x, index.y )!=null )return;
-            this.indexerTable.Set( index.x, index.y, [] );
+        var checkArray = ( index:basic.Vector2Int ):void=>{
+            if( this.indexerTable.GetWithVector( index )!=null )return;
+            this.indexerTable.SetWithVector( index, [] );
         }//................................................
         for(var i=0; i<this.unitsList.length; i++){
             var unit = this.unitsList[i];
             var unitIndexerIndex = grid.unitIndexerGrid.realToIndex( unit.position );
             checkArray( unitIndexerIndex );
-            this.indexerTable.Get( unitIndexerIndex.x, unitIndexerIndex.y )?.push( unit );
+            this.indexerTable.GetWithVector( unitIndexerIndex )?.push( unit );
         }
     }//----------------------------------------------------
     private clearIndexer():void{
@@ -70,7 +70,7 @@ export class UnitContainer{
             var index = indexList[i];
             var units = this.indexerTable.Get( index.x, index.y );
             var indexerPosition = grid.unitIndexerGrid.indexToReal(
-                new basic.Vector2(index.x, index.y) );
+                new basic.Vector2Int(index.x, index.y) );
             if( units==null )continue;
             for(var j=0; j<units.length; j++){
                 var unit = units[j];

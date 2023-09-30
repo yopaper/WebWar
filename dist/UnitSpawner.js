@@ -5,7 +5,7 @@ export class UnitSpawner {
         this.unitOwner = unitOwner;
         this.spawnFunction = spawnFunction;
         this.coolDownMax = coolDownMax;
-        this.coolDownTimer = Math.random() * coolDownMax / 3;
+        this.coolDownTimer = Math.random() * coolDownMax / 7.5;
         this.spawnEnergy = 0;
         this.spawnEnergyDelta = energyDelta;
         this.spawnEnergyMax = energyMax;

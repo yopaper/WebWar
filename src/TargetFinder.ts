@@ -8,7 +8,7 @@ abstract class TargetFinder{
     public getTarget():unit.Unit|null{
         return this.target;
     }//---------------------------------------------
-    public targetIndexPosition():basic.Vector2|null{
+    public targetIndexPosition():basic.Vector2Int|null{
         if( this.target==null )return null;
         return this.target.mapBlockIndex();
     }//---------------------------------------------
@@ -26,7 +26,7 @@ export abstract class UnitTargetFinder extends TargetFinder{
     public override update(): void {
         if( this.target!=null && this.loseTargetCondition() ){
             this.target = null;
-        }else{
+        }else if(this.target==null){
             this.findTarget();
         }
     }//---------------------------------------------
@@ -55,6 +55,7 @@ abstract class ClosestTargetFinder  extends UnitTargetFinder{
         for(var i=0; i<filtedUnits.length; i++){
             var unit = filtedUnits[i];
             var dist = this.unitOwner.position.euclideanDistance(unit.position);
+            var dist = this.unitOwner.indexDistanceWithUnit(unit).getBlockDistance();
             if( dist == minDist ){
                 closestUnits.push( unit );
             }else if( dist < minDist ){
@@ -80,20 +81,20 @@ abstract class GlobalTargetFinder   extends UnitTargetFinder{
 
 // 搜尋最近敵人的搜尋器
 export class AttackTargetFinder     extends ClosestTargetFinder{
-    protected findRange:number;
+    protected findRange:basic.MapBlockDistance;
     //----------------------------------------------
-    constructor(unitOwner:unit.Unit, findRange:number, indexerRange:number){
+    constructor(unitOwner:unit.Unit, findRange:basic.MapBlockDistance, indexerRange:number){
         super( unitOwner, indexerRange );
         this.findRange = findRange;
     }//---------------------------------------------
     protected override filterCondition(unit: unit.Unit): boolean {
-        var dist = this.unitOwner.position.euclideanDistance(unit.position);
-        return( !this.unitOwner.team.same(unit.team) && dist<=this.findRange );
+        var dist = this.unitOwner.indexDistanceWithUnit( unit ).getBlockDistance();
+        return( !this.unitOwner.team.same(unit.team) && dist<=this.findRange.getBlockDistance() );
     }//---------------------------------------------
     protected loseTargetCondition(): boolean {
         if( this.target==null )return false;
-        var dist = this.unitOwner.indexDistanceWithUnit(this.target);
-        return( dist==null || dist>this.findRange || this.target.hp.dead() ||
+        var dist = this.unitOwner.indexDistanceWithUnit(this.target).getBlockDistance();
+        return( dist>this.findRange.getBlockDistance() || this.target.hp.dead() ||
             this.unitOwner.team.same(this.target.team) );
     }//---------------------------------------------
 }//=================================================
@@ -105,6 +106,8 @@ export class MainTargetFinder       extends GlobalTargetFinder{
     }//---------------------------------------------
     protected loseTargetCondition(): boolean {
         if( this.target==null )return false;
-        return( this.unitOwner.team.same(this.target.team) || this.target.hp.dead() );
+        var lose = ( this.unitOwner.team.same(this.target.team) || this.target.hp.dead() );
+        console.log(lose);
+        return lose;
     }//---------------------------------------------
 }//=================================================

@@ -1,6 +1,6 @@
 import * as canvas from "./CanvasHandler.js";
 import * as grid from "./Grid.js";
-const DEBUG_ENABLE = true;
+const DEBUG_ENABLE = false;
 export class UnitMover {
     constructor(unitOwner) {
         this.unitOwner = unitOwner;
@@ -38,22 +38,26 @@ export class NormalUnitMover extends UnitMover {
     findNextStep() {
         if (!this.needToFindNext)
             return;
-        this.needToFindNext = false;
-        var mainTargetPath = this.unitOwner.mapOwner.pathHandler.getBlockPathWithPosition(this.mainTargetIndex);
+        var mainTargetPath = this.unitOwner.mapOwner.pathHandler.getBlockPathWithVector(this.mainTargetIndex);
         if (mainTargetPath == null)
             return;
-        var nextBlock = mainTargetPath.getNextBlockToThis(this.nextTargetIndex);
+        var currentUnitIndex = this.unitOwner.mapBlockIndex();
+        var nextBlock = mainTargetPath.getNextBlockToThis(currentUnitIndex);
         if (nextBlock == null)
             return;
         var nextIndex = nextBlock.indexPosition;
         var nextPosition = nextBlock.randomPositionOn();
-        if (this.nextTargetIndex.x == nextIndex.x) {
-            this.nextTargetPosition.set(this.nextTargetPosition.x, nextPosition.y);
+        if (this.nextTargetIndex.getX() == nextIndex.getX()) {
+            this.nextTargetPosition.set(this.nextTargetPosition.getX(), nextPosition.getY());
+        }
+        else if (this.nextTargetIndex.getY() == nextIndex.getY()) {
+            this.nextTargetPosition.set(nextPosition.getX(), this.nextTargetPosition.getY());
         }
         else {
-            this.nextTargetPosition.set(nextPosition.x, this.nextTargetPosition.y);
+            this.nextTargetPosition.set(nextPosition.getX(), nextPosition.getY());
         }
         this.nextTargetIndex.setWithVector(nextIndex);
+        this.needToFindNext = false;
     }
     checkArrive() {
         if (this.needToFindNext)
@@ -71,8 +75,8 @@ export class NormalUnitMover extends UnitMover {
     moveToNext() {
         if (this.unitOwner.attacker.isAttacking())
             return;
-        var posDelta = { x: this.nextTargetPosition.x - this.unitOwner.position.x,
-            y: this.nextTargetPosition.y - this.unitOwner.position.y };
+        var posDelta = { x: this.nextTargetPosition.getX() - this.unitOwner.position.getX(),
+            y: this.nextTargetPosition.getY() - this.unitOwner.position.getY() };
         var absDelta = { x: Math.abs(posDelta.x), y: Math.abs(posDelta.y) };
         var moveDelta = {
             x: Math.min(absDelta.x, this.moveSpeed),
@@ -94,7 +98,7 @@ export class NormalUnitMover extends UnitMover {
     debugDraw() {
         if (!DEBUG_ENABLE)
             return;
-        canvas.drawLine(this.unitOwner.position, this.nextTargetPosition, "#00FF00", 1);
-        canvas.drawLine(this.unitOwner.position, grid.mapBlockGrid.indexToReal(this.mainTargetIndex), "#00FFFF", 1);
+        canvas.drawLine(this.unitOwner.position, this.nextTargetPosition, "#00FF00", 0);
+        canvas.drawLine(this.unitOwner.position, grid.mapBlockGrid.indexToReal(this.mainTargetIndex), "#00FFFF", 0);
     }
 }

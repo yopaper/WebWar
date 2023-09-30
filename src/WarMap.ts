@@ -18,15 +18,15 @@ export class WarMap{
         return this.blocksTable.GetAllValues();
     }//--------------------------------------------
     // 取得方塊
-    public getBlockWithPosition(position:basic.Vector2):mapBlock.MapBlock|null{
-        return this.blocksTable.Get(position.x, position.y);
+    public getBlockWithIndex(index:basic.Vector2Int):mapBlock.MapBlock|null{
+        return this.blocksTable.GetWithVector(index);
     }//--------------------------------------------
     public getBlock(x:number, y:number):mapBlock.MapBlock|null{
         return this.blocksTable.Get(x, y);
     }//--------------------------------------------
     // 加入方塊
     public addBlock(block:mapBlock.MapBlock):void{
-        this.blocksTable.Set( block.indexPosition.x, block.indexPosition.y, block );
+        this.blocksTable.SetWithVector( block.indexPosition, block );
     }//--------------------------------------------
     public drawAllBlock():void{
         var blocks = this.blocksTable.GetAllValues();

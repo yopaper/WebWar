@@ -15,6 +15,7 @@ export class Unit {
     }
     update() {
         this.draw();
+        this.hp.update();
         this.mover.update();
         this.attacker.update();
         this.behavior.update();
@@ -30,7 +31,7 @@ export class Unit {
         return grid.unitIndexerGrid.realToIndex(this.position);
     }
     standedBlock() {
-        return this.mapOwner.getBlockWithPosition(this.mapBlockIndex());
+        return this.mapOwner.getBlockWithIndex(this.mapBlockIndex());
     }
     getTarget() {
         for (var i = 0; i < this.targetFinders.length; i++) {

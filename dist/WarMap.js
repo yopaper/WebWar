@@ -14,14 +14,14 @@ export class WarMap {
     getBlocks() {
         return this.blocksTable.GetAllValues();
     }
-    getBlockWithPosition(position) {
-        return this.blocksTable.Get(position.x, position.y);
+    getBlockWithIndex(index) {
+        return this.blocksTable.GetWithVector(index);
     }
     getBlock(x, y) {
         return this.blocksTable.Get(x, y);
     }
     addBlock(block) {
-        this.blocksTable.Set(block.indexPosition.x, block.indexPosition.y, block);
+        this.blocksTable.SetWithVector(block.indexPosition, block);
     }
     drawAllBlock() {
         var blocks = this.blocksTable.GetAllValues();

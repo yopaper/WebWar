@@ -1,3 +1,4 @@
+import * as grid from "./Grid.js";
 export function hToColor(h) {
     h = h * Math.PI;
     var degreeToColorValue = (offset) => {
@@ -23,6 +24,8 @@ export class Vector2 {
         this.y = 0;
         this.set(x, y);
     }
+    getX() { return this.x; }
+    getY() { return this.y; }
     copy() {
         return new Vector2(this.x, this.y);
     }
@@ -48,6 +51,23 @@ export class Vector2 {
     equal(vector) {
         return (this.x == vector.x && this.y == vector.y);
     }
+    toDictFormat() {
+        return { x: this.x, y: this.y };
+    }
+}
+export class Vector2Int extends Vector2 {
+    set(x, y) {
+        super.set(Math.round(x), Math.round(y));
+    }
+    equal(vector) {
+        return (this.x == vector.x && this.y == vector.y);
+    }
+    copy() {
+        return new Vector2Int(this.x, this.y);
+    }
+    getOffset(deltax, deltay) {
+        return new Vector2Int(this.x + deltax, this.y + deltay);
+    }
     getAdjacent() {
         return [this.getOffset(0, 1), this.getOffset(1, 0),
             this.getOffset(0, -1), this.getOffset(-1, 0)];
@@ -56,9 +76,6 @@ export class Vector2 {
         var adjacent = this.getAdjacent();
         return [adjacent[0].toDictFormat(), adjacent[1].toDictFormat(),
             adjacent[2].toDictFormat(), adjacent[3].toDictFormat()];
-    }
-    toDictFormat() {
-        return { x: this.x, y: this.y };
     }
 }
 export class Table2D {
@@ -81,6 +98,9 @@ export class Table2D {
             this.valueTable.set(x, new Map());
         (_c = this.valueTable.get(x)) === null || _c === void 0 ? void 0 : _c.set(y, value);
     }
+    SetWithVector(vector, value) {
+        this.Set(vector.getX(), vector.getY(), value);
+    }
     Get(x, y) {
         var _a, _b;
         x = Math.round(x);
@@ -90,6 +110,9 @@ export class Table2D {
         if (!((_a = this.valueTable.get(x)) === null || _a === void 0 ? void 0 : _a.has(y)))
             return null;
         return (_b = this.valueTable.get(x)) === null || _b === void 0 ? void 0 : _b.get(y);
+    }
+    GetWithVector(vector) {
+        return this.Get(vector.getX(), vector.getY());
     }
     GetAllValues() {
         return Array.from(this.keyTable.keys());
@@ -125,5 +148,28 @@ export class Table2D {
         for (var i = 0; i < xList.length; i++) {
             var xMap = (_a = this.valueTable.get(xList[i])) === null || _a === void 0 ? void 0 : _a.clear();
         }
+    }
+}
+export class Distance {
+    static inaccessible() {
+        return new Distance(Number.POSITIVE_INFINITY);
+    }
+    constructor(distance) {
+        this.distance = distance;
+    }
+    getDistance() {
+        return this.distance;
+    }
+}
+export class MapBlockDistance extends Distance {
+    static inaccessible() {
+        return new MapBlockDistance(Number.POSITIVE_INFINITY);
+    }
+    constructor(blockDistance) {
+        super(blockDistance * grid.BLOCK_SIZE);
+        this.blockDistance = blockDistance;
+    }
+    getBlockDistance() {
+        return this.blockDistance;
     }
 }
