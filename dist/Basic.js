@@ -151,23 +151,23 @@ export class Table2D {
     }
 }
 export class Distance {
-    static inaccessible() {
-        return new Distance(Number.POSITIVE_INFINITY);
-    }
     constructor(distance) {
         this.distance = distance;
+    }
+    static inaccessible() {
+        return new Distance(Number.POSITIVE_INFINITY);
     }
     getDistance() {
         return this.distance;
     }
 }
 export class MapBlockDistance extends Distance {
-    static inaccessible() {
-        return new MapBlockDistance(Number.POSITIVE_INFINITY);
-    }
     constructor(blockDistance) {
         super(blockDistance * grid.BLOCK_SIZE);
         this.blockDistance = blockDistance;
+    }
+    static inaccessible() {
+        return new MapBlockDistance(Number.POSITIVE_INFINITY);
     }
     getBlockDistance() {
         return this.blockDistance;

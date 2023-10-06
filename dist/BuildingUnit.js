@@ -84,7 +84,7 @@ export class Tower extends unit.BuildingUnit {
         canvas.drawCircle(this.position, 9, undefined, { strokeColor: this.team.getMainColorWithRate(this.hp.shieldRate()), strokeWidth: 1 });
     }
     hpSource() {
-        return new unitHp.UnitHpWithShield(300, 1, 100);
+        return new unitHp.UnitHpWithShield(500, 2, 750);
     }
     spawnersSource() {
         return [];
