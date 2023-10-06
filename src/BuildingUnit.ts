@@ -102,7 +102,7 @@ export class Tower extends unit.BuildingUnit{
                 {strokeColor:this.team.getMainColorWithRate(this.hp.shieldRate()), strokeWidth:1} );
     }//-----------------------------------------------
     protected hpSource(): unitHp.UnitHp {
-        return new unitHp.UnitHpWithShield(300, 1, 100);
+        return new unitHp.UnitHpWithShield(500, 2, 750);
     }//-----------------------------------------------
     protected override spawnersSource(): unitSpawner.UnitSpawner[] {
         return [];
